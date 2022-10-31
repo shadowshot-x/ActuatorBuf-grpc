@@ -13,5 +13,8 @@ We need the interaction between service and engine to be highly performant and t
 
 Initial design will be simple request response in gRPC. We can modify the interaction to be bi-directional streams in the further releases.
 
+### Request Format
+``` curl http://localhost:9090/variable --request POST --data @body.json  -H "Content-Type: application/json" ```
+
 ## Nirvana (Expectations from the Project)
 Create generic designs for client and engine for database interactions and database state handling. Deploy the engine service on Cloud and create client packages for databases like MySQL, PostgreSQL databases etc. to maintain custom deployments on cloud. State of engine should be stored in a reliable key value pair like Redis/minio to be durable.
