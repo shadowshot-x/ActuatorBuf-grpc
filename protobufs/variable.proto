@@ -1,0 +1,9 @@
+syntax = "proto3";
+package main;
+
+option go_package = "./protobufs";
+
+message ExpectedStateVariable {
+    int64 var1 = 1;
+    string var2 = 2;
+}
