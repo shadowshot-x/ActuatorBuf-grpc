@@ -16,5 +16,15 @@ Initial design will be simple request response in gRPC. We can modify the intera
 ### Request Format
 ``` curl http://localhost:9090/variable --request POST --data @body.json  -H "Content-Type: application/json" ```
 
+## Protoc Compiler command
+``` protoc --go_out=./ --go_opt=paths=source_relative --go-grpc_out=./ --go-grpc_opt=paths=source_relative ./protobufs/*.proto ```
+
+As the requests are not HTTP/1, a normal `curl` wont work. We can use `grpcurl` tool to stream requests on HTTP/2.
+
+``` grpcurl -plaintext localhost:9091 main.PingRPC.PingCheck ```
+
+Using Service Discovery in gRPC (Only possible when reflection is enabled)
+```  grpcurl -plaintext localhost:9091 main.PingRPC list ```
+
 ## Nirvana (Expectations from the Project)
 Create generic designs for client and engine for database interactions and database state handling. Deploy the engine service on Cloud and create client packages for databases like MySQL, PostgreSQL databases etc. to maintain custom deployments on cloud. State of engine should be stored in a reliable key value pair like Redis/minio to be durable.
