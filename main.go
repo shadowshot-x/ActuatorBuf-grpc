@@ -9,6 +9,7 @@ import (
 	"shadowshot-x/actuatorbuf/protobufs"
 	"shadowshot-x/actuatorbuf/rest"
 	"sync"
+	"sync/atomic"
 
 	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -16,12 +17,12 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func restServer() {
+func restServer(p *atomic.Value) {
 	fmt.Println("gcp")
 	// / REST ROUTER FOR MAINTAINER INTERACTION
 	mainRouter := mux.NewRouter()
 
-	maintainerController := rest.MaintainerController{}
+	maintainerController := rest.MaintainerController{P: p}
 
 	mainRouter.HandleFunc("/ping", rest.PingHandler)
 	mainRouter.HandleFunc("/variable", maintainerController.StatePostHandler).Methods("POST")
@@ -37,7 +38,7 @@ func restServer() {
 	}
 }
 
-func grpcServer() {
+func grpcServer(p *atomic.Value) {
 	fmt.Println("gcp")
 	// GRPC ROUTER FOR CLIENT INTERACTION
 	listener, err := net.Listen("tcp", ":9091")
@@ -48,17 +49,19 @@ func grpcServer() {
 	s := grpc.NewServer()
 	reflection.Register(s)
 	protobufs.RegisterPingRPCServer(s, &grpcserver.PingServer{})
-	protobufs.RegisterActuatorServer(s, &grpcserver.ActuatorServer{})
+	protobufs.RegisterActuatorServer(s, &grpcserver.ActuatorServer{P: p})
 	if err := s.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
 func main() {
+	// Atomic state map
+	var simpAtomicMap atomic.Value
 	var wg sync.WaitGroup
 	wg.Add(2)
-	go restServer()
-	go grpcServer()
+	go restServer(&simpAtomicMap)
+	go grpcServer(&simpAtomicMap)
 	wg.Wait()
 
 }
