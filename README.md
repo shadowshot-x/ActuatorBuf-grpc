@@ -23,8 +23,11 @@ As the requests are not HTTP/1, a normal `curl` wont work. We can use `grpcurl` 
 
 ``` grpcurl -plaintext localhost:9091 main.PingRPC.PingCheck ```
 
+``` grpcurl -d '{"var1": 1234, "var2": "check"}' -plaintext  localhost:9091  main.Actuator.ContractStateCheck ```
+
 Using Service Discovery in gRPC (Only possible when reflection is enabled)
-```  grpcurl -plaintext localhost:9091 main.PingRPC list ```
+```  grpcurl -plaintext localhost:9091 list ```
+
 
 ## Nirvana (Expectations from the Project)
 Create generic designs for client and engine for database interactions and database state handling. Deploy the engine service on Cloud and create client packages for databases like MySQL, PostgreSQL databases etc. to maintain custom deployments on cloud. State of engine should be stored in a reliable key value pair like Redis/minio to be durable.

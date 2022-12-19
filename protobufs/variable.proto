@@ -19,3 +19,17 @@ message PingMessage {
 message PingResponse {
     string ping = 1;
 }
+
+// service for Actuator Check with Desired variables. This returns if expected and desired state matches
+service Actuator {
+    rpc ContractStateCheck (ContractVariableState) returns (ContractVariableStateCheck) {}
+}
+
+message ContractVariableStateCheck {
+    bool stateCheck = 1;
+}
+
+message ContractVariableState {
+    int64 var1 = 1;
+    string var2 = 2;
+}

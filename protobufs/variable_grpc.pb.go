@@ -103,3 +103,89 @@ var PingRPC_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "protobufs/variable.proto",
 }
+
+// ActuatorClient is the client API for Actuator service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ActuatorClient interface {
+	ContractStateCheck(ctx context.Context, in *ContractVariableState, opts ...grpc.CallOption) (*ContractVariableStateCheck, error)
+}
+
+type actuatorClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewActuatorClient(cc grpc.ClientConnInterface) ActuatorClient {
+	return &actuatorClient{cc}
+}
+
+func (c *actuatorClient) ContractStateCheck(ctx context.Context, in *ContractVariableState, opts ...grpc.CallOption) (*ContractVariableStateCheck, error) {
+	out := new(ContractVariableStateCheck)
+	err := c.cc.Invoke(ctx, "/main.Actuator/ContractStateCheck", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ActuatorServer is the server API for Actuator service.
+// All implementations must embed UnimplementedActuatorServer
+// for forward compatibility
+type ActuatorServer interface {
+	ContractStateCheck(context.Context, *ContractVariableState) (*ContractVariableStateCheck, error)
+	mustEmbedUnimplementedActuatorServer()
+}
+
+// UnimplementedActuatorServer must be embedded to have forward compatible implementations.
+type UnimplementedActuatorServer struct {
+}
+
+func (UnimplementedActuatorServer) ContractStateCheck(context.Context, *ContractVariableState) (*ContractVariableStateCheck, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ContractStateCheck not implemented")
+}
+func (UnimplementedActuatorServer) mustEmbedUnimplementedActuatorServer() {}
+
+// UnsafeActuatorServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ActuatorServer will
+// result in compilation errors.
+type UnsafeActuatorServer interface {
+	mustEmbedUnimplementedActuatorServer()
+}
+
+func RegisterActuatorServer(s grpc.ServiceRegistrar, srv ActuatorServer) {
+	s.RegisterService(&Actuator_ServiceDesc, srv)
+}
+
+func _Actuator_ContractStateCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ContractVariableState)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ActuatorServer).ContractStateCheck(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/main.Actuator/ContractStateCheck",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ActuatorServer).ContractStateCheck(ctx, req.(*ContractVariableState))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Actuator_ServiceDesc is the grpc.ServiceDesc for Actuator service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Actuator_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "main.Actuator",
+	HandlerType: (*ActuatorServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ContractStateCheck",
+			Handler:    _Actuator_ContractStateCheck_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "protobufs/variable.proto",
+}
