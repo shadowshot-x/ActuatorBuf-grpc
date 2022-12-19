@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"shadowshot-x/actuatorbuf/protobufs"
+	"sync/atomic"
 )
 
 type PingServer struct {
@@ -12,6 +13,7 @@ type PingServer struct {
 
 type ActuatorServer struct {
 	protobufs.UnimplementedActuatorServer
+	P *atomic.Value
 }
 
 func (s *PingServer) PingCheck(ctx context.Context, pm *protobufs.PingMessage) (*protobufs.PingResponse, error) {
@@ -20,6 +22,7 @@ func (s *PingServer) PingCheck(ctx context.Context, pm *protobufs.PingMessage) (
 
 func (s *ActuatorServer) ContractStateCheck(ctx context.Context, pm *protobufs.ContractVariableState) (*protobufs.ContractVariableStateCheck, error) {
 	fmt.Println(pm)
+	fmt.Println(s.P.Load())
 	response := &protobufs.ContractVariableStateCheck{StateCheck: true}
 	return response, nil
 }
