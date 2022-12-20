@@ -3,9 +3,10 @@ package grpcserver
 import (
 	"context"
 	"fmt"
-	pkg "shadowshot-x/actuatorbuf/pkg/simpleVariableActuate"
-	"shadowshot-x/actuatorbuf/protobufs"
 	"sync/atomic"
+
+	pkg "github.com/shadowshot-x/ActuatorBuf-grpc/pkg/simpleVariableActuate"
+	"github.com/shadowshot-x/ActuatorBuf-grpc/protobufs"
 )
 
 type PingServer struct {

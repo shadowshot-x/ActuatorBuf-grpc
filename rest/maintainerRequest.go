@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	pkg "shadowshot-x/actuatorbuf/pkg/simpleVariableActuate"
 	"sync/atomic"
+
+	pkg "github.com/shadowshot-x/ActuatorBuf-grpc/pkg/simpleVariableActuate"
 )
 
 type MaintainerController struct {
