@@ -3,6 +3,7 @@ package grpcserver
 import (
 	"context"
 	"fmt"
+	pkg "shadowshot-x/actuatorbuf/pkg/simpleVariableActuate"
 	"shadowshot-x/actuatorbuf/protobufs"
 	"sync/atomic"
 )
@@ -23,6 +24,16 @@ func (s *PingServer) PingCheck(ctx context.Context, pm *protobufs.PingMessage) (
 func (s *ActuatorServer) ContractStateCheck(ctx context.Context, pm *protobufs.ContractVariableState) (*protobufs.ContractVariableStateCheck, error) {
 	fmt.Println(pm)
 	fmt.Println(s.P.Load())
-	response := &protobufs.ContractVariableStateCheck{StateCheck: true}
+	desiredState := s.P.Load().(pkg.SimpleVariable)
+	currentState := pkg.ConvertToSimpleVariable(pm.Var1, pm.Var2)
+	check, msg, err := desiredState.StateCheck(*currentState)
+	if err != nil {
+		return nil, err
+	}
+	if !check {
+		response := &protobufs.ContractVariableStateCheck{StateCheck: "false", StateMessage: msg}
+		return response, nil
+	}
+	response := &protobufs.ContractVariableStateCheck{StateCheck: "true"}
 	return response, nil
 }

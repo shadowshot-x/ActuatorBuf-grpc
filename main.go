@@ -18,7 +18,7 @@ import (
 )
 
 func restServer(p *atomic.Value) {
-	fmt.Println("gcp")
+	fmt.Println("rest server started")
 	// / REST ROUTER FOR MAINTAINER INTERACTION
 	mainRouter := mux.NewRouter()
 
@@ -39,7 +39,7 @@ func restServer(p *atomic.Value) {
 }
 
 func grpcServer(p *atomic.Value) {
-	fmt.Println("gcp")
+	fmt.Println("gRPC server started")
 	// GRPC ROUTER FOR CLIENT INTERACTION
 	listener, err := net.Listen("tcp", ":9091")
 	if err != nil {
@@ -63,5 +63,4 @@ func main() {
 	go restServer(&simpAtomicMap)
 	go grpcServer(&simpAtomicMap)
 	wg.Wait()
-
 }
