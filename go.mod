@@ -1,4 +1,4 @@
-module shadowshot-x/actuatorbuf
+module github.com/shadowshot-x/ActuatorBuf-grpc
 
 go 1.19
 

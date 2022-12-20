@@ -5,11 +5,12 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"shadowshot-x/actuatorbuf/grpcserver"
-	"shadowshot-x/actuatorbuf/protobufs"
-	"shadowshot-x/actuatorbuf/rest"
 	"sync"
 	"sync/atomic"
+
+	"github.com/shadowshot-x/ActuatorBuf-grpc/grpcserver"
+	"github.com/shadowshot-x/ActuatorBuf-grpc/protobufs"
+	"github.com/shadowshot-x/ActuatorBuf-grpc/rest"
 
 	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
