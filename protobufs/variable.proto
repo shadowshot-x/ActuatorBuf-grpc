@@ -26,7 +26,8 @@ service Actuator {
 }
 
 message ContractVariableStateCheck {
-    bool stateCheck = 1;
+    string stateCheck = 1;
+    string stateMessage = 2;
 }
 
 message ContractVariableState {
